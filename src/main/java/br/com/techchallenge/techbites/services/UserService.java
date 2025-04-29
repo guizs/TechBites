@@ -1,11 +1,11 @@
 package br.com.techchallenge.techbites.services;
 
+import br.com.techchallenge.techbites.DTOs.UserRequestDTO;
+import br.com.techchallenge.techbites.DTOs.UserResponseDTO;
 import br.com.techchallenge.techbites.entities.User;
+import br.com.techchallenge.techbites.mappers.UserMapper;
 import br.com.techchallenge.techbites.repositories.UserRepository;
 import br.com.techchallenge.techbites.services.execeptions.ResourceNotFoundExeception;
-import io.swagger.v3.oas.annotations.Operation;
-import org.hibernate.sql.Update;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,37 +16,36 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
+    private final UserMapper mapper;
 
-    public User createUser(User user) {
-        return repository.save(user);
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        this.repository = userRepository;
+        this.mapper = userMapper;
     }
 
-    public List<User> findAllUsers() {
-        return repository.findAll();
+    public UserResponseDTO createUser(UserRequestDTO user) {
+        User entity = this.mapper.toEntity(user);
+        return this.mapper.toDTO(repository.save(entity));
     }
 
-    public Optional<User> findUserById(Long id) {
-        return Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + "Not Found")));
+    public List<UserResponseDTO> findAllUsers() {
+        return this.mapper.toListDTO(repository.findAll());
     }
 
-    public User updateUserById(Long id, User newData) {
+    public Optional<UserResponseDTO> findUserById(Long id) {
+        return Optional.of(repository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + " Not Found")))
+                .map(this.mapper::toDTO);
+    }
+
+    public UserResponseDTO updateUserById(Long id, UserRequestDTO newData) {
         User existingUser = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + " Not Found"));
 
-        return updateUser(existingUser, newData);
-    }
+        this.mapper.updateEntity(existingUser, newData);
 
-    private User updateUser(User existingUser, User newData) {
-        existingUser.setName(newData.getName());
-        existingUser.setEmail(newData.getEmail());
-        existingUser.setPassword(newData.getPassword());
-        existingUser.setRole(newData.getRole());
-        existingUser.setLastUpdatedAt(LocalDateTime.now());
-
-        return repository.save(existingUser);
+        return this.mapper.toDTO(this.repository.save(existingUser));
     }
 
     public void deleteUserById(Long id) {

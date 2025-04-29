@@ -2,81 +2,47 @@ package br.com.techchallenge.techbites.controllers;
 
 import br.com.techchallenge.techbites.DTOs.UserRequestDTO;
 import br.com.techchallenge.techbites.DTOs.UserResponseDTO;
-import br.com.techchallenge.techbites.entities.User;
 import br.com.techchallenge.techbites.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserService service;
 
     public UserController(UserService userService) {
-        this.userService = userService;
+        this.service = userService;
     }
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userRequest) {
-        User user = new User();
-        user.setName(userRequest.name());
-        user.setEmail(userRequest.email());
-        user.setPassword(userRequest.password());
-        user.setRole(userRequest.role());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setLastUpdatedAt(LocalDateTime.now());
-
-        User savedUser = userService.createUser(user);
-
-        UserResponseDTO response = new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getRole(), savedUser.getCreatedAt(), savedUser.getLastUpdatedAt());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(userRequest));
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<User> users = userService.findAllUsers();
-
-        List<UserResponseDTO> userResponses = users.stream()
-                .map(user -> new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getCreatedAt(), user.getLastUpdatedAt()))
-                .toList();
-
-        return ResponseEntity.ok(userResponses);
+        return ResponseEntity.ok(service.findAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> findUserById(@PathVariable Long id) {
-        User user = userService.findUserById(id).orElseThrow(() -> new RuntimeException("User not found"));
-
-        UserResponseDTO response = new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getCreatedAt(), user.getLastUpdatedAt());
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Optional<UserResponseDTO>> findUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findUserById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequest) {
-        User updatedUser = new User();
-        updatedUser.setName(userRequest.name());
-        updatedUser.setEmail(userRequest.email());
-        updatedUser.setPassword(userRequest.password());
-        updatedUser.setRole(userRequest.role());
-
-        User savedUser = userService.updateUserById(id, updatedUser);
-
-        UserResponseDTO response = new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getRole(), savedUser.getCreatedAt(), savedUser.getLastUpdatedAt());
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateUserById(id , userRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
+        service.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 }
