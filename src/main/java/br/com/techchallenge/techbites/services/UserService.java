@@ -26,11 +26,20 @@ public class UserService {
 
     public UserResponseDTO createUser(UserRequestDTO user) {
         User entity = this.mapper.toEntity(user);
+        entity.setActive(true);
         return this.mapper.toDTO(repository.save(entity));
     }
 
-    public List<UserResponseDTO> findAllUsers() {
-        return this.mapper.toListDTO(repository.findAll());
+    public List<UserResponseDTO> findAllUsers(Boolean active) {
+        List<User> users;
+
+        if (active == null) {
+            users = repository.findAll();
+        } else {
+            users = repository.findByActive(active);
+        }
+
+        return this.mapper.toListDTO(users);
     }
 
     public Optional<UserResponseDTO> findUserById(Long id) {
@@ -53,5 +62,14 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + " Not Found"));
         repository.delete(user);
     }
+
+    public void enableUserByEmail(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundExeception("User with email: " + email + " Not Found"));
+        user.setActive(true);
+        repository.save(user);
+    }
+
+
 
 }
