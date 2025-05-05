@@ -3,6 +3,7 @@ package br.com.techchallenge.techbites.controllers;
 import br.com.techchallenge.techbites.DTOs.UserRequestDTO;
 import br.com.techchallenge.techbites.DTOs.UserResponseDTO;
 import br.com.techchallenge.techbites.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userRequest) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(userRequest));
     }
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequest) {
+    public ResponseEntity<UserResponseDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserRequestDTO userRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateUserById(id , userRequest));
     }
 
