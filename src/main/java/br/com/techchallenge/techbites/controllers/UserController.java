@@ -3,9 +3,13 @@ package br.com.techchallenge.techbites.controllers;
 import br.com.techchallenge.techbites.DTOs.UserRequestDTO;
 import br.com.techchallenge.techbites.DTOs.UserResponseDTO;
 import br.com.techchallenge.techbites.services.UserService;
+
+import jakarta.validation.Valid;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +30,8 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Criar novo usuário", description = "Cria um novo usuário com os dados fornecidos")
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userRequest) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequest) {
+    feature_entity_user
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(userRequest));
     }
 
@@ -47,9 +52,11 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar usuário", description = "Atualiza os dados de um usuário existente")
     public ResponseEntity<UserResponseDTO> updateUser(
+            @Valid
             @Parameter(description = "ID do usuário a ser atualizado") @PathVariable Long id,
             @RequestBody UserRequestDTO userRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateUserById(id, userRequest));
+
     }
 
     @DeleteMapping("/{id}")
