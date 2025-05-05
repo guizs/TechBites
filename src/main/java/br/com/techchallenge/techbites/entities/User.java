@@ -2,12 +2,15 @@ package br.com.techchallenge.techbites.entities;
 
 import br.com.techchallenge.techbites.entities.enums.Role;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_users")
+@SQLDelete(sql = "UPDATE tb_users SET active = false WHERE id = ?")
 public class User {
 
     @Id
@@ -33,6 +36,9 @@ public class User {
 
     @Column(name = "last_updated_at")
     private LocalDateTime lastUpdatedAt;
+
+    @Column(name = "active", nullable = false)
+    private Boolean active = true;
 
     public Long getId() {
         return id;
@@ -89,6 +95,10 @@ public class User {
     public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
         this.lastUpdatedAt = lastUpdatedAt;
     }
+
+    public Boolean getActive() { return active; }
+
+    public void setActive(Boolean active) { this.active = active; }
 
     @Override
     public String toString() {
