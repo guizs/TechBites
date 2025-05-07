@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping
     @Operation(summary = "Criar novo usuário", description = "Cria um novo usuário com os dados fornecidos")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequest) {
-    feature_entity_user
+
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(userRequest));
     }
 
