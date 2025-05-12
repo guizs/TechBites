@@ -36,11 +36,22 @@ public class UserController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista com todos os usuários cadastrados")
+    @Operation(summary = "Listar usuários", description = """
+    Retorna usuários conforme o valor do parâmetro 'active':
+    
+    - `true`: apenas usuários ativos  
+    - `false`: apenas usuários inativos  
+    - omitido: todos os usuários
+    """)
     public ResponseEntity<List<UserResponseDTO>> getAllUsers(
-            @RequestParam(required = false) Boolean active) {  // Esse é o parâmetro que você vai passar pela URL
+            @Parameter(
+                    description = "Filtrar usuários por status. Use `true` para ativos, `false` para inativos ou deixe em branco para todos.",
+                    example = "true"
+            )
+            @RequestParam(required = false) Boolean active) {
         return ResponseEntity.ok(service.findAllUsers(active));
     }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar usuário por ID", description = "Retorna os dados de um usuário específico")
@@ -60,17 +71,23 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar usuário", description = "Desabilita um usuário do sistema")
+    @Operation(
+            summary = "Desabilitar usuário",
+            description = "Realiza um soft delete no usuário. O registro não é removido do banco de dados, apenas marcado como inativo (active = false)."
+    )
     public ResponseEntity<Void> deleteUser(
-            @Parameter(description = "ID do usuário a ser deletado") @PathVariable Long id) {
+            @Parameter(description = "ID do usuário a ser desabilitado", example = "1") @PathVariable Long id) {
         service.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/enable/{email}")
-    @Operation(summary = "Habilitar usuário", description = "Habilita um usuário pelo email")
+    @Operation(
+            summary = "Habilitar usuário",
+            description = "Reativa um usuário anteriormente desabilitado, marcando o campo 'active' como true."
+    )
     public ResponseEntity<Void> enableUserByEmail(
-            @Parameter(description = "Email do usuário a ser habilitado") @PathVariable String email) {
+            @Parameter(description = "Email do usuário a ser habilitado", example = "usuario@exemplo.com") @PathVariable String email) {
         service.enableUserByEmail(email);
         return ResponseEntity.noContent().build();
     }
