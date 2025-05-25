@@ -5,10 +5,9 @@ import br.com.techchallenge.techbites.DTOs.UserResponseDTO;
 import br.com.techchallenge.techbites.entities.User;
 import br.com.techchallenge.techbites.mappers.UserMapper;
 import br.com.techchallenge.techbites.repositories.UserRepository;
-import br.com.techchallenge.techbites.services.execeptions.ResourceNotFoundExeception;
+import br.com.techchallenge.techbites.services.execeptions.DuplicateKeyException;
+import br.com.techchallenge.techbites.services.execeptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +23,11 @@ public class UserService {
         this.mapper = userMapper;
     }
 
-    public UserResponseDTO createUser(UserRequestDTO user) {
-        User entity = this.mapper.toEntity(user);
+    public UserResponseDTO createUser(UserRequestDTO userDto) {
+
+        this.validateEmail(userDto.email());
+
+        User entity = this.mapper.toEntity(userDto);
         entity.setActive(true);
         return this.mapper.toDTO(repository.save(entity));
     }
@@ -44,13 +46,19 @@ public class UserService {
 
     public Optional<UserResponseDTO> findUserById(Long id) {
         return Optional.of(repository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + " Not Found")))
+                        .orElseThrow(() -> new UserNotFoundException("id" , id.toString())))
                 .map(this.mapper::toDTO);
     }
 
     public UserResponseDTO updateUserById(Long id, UserRequestDTO newData) {
         User existingUser = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + " Not Found"));
+                .orElseThrow(() -> new UserNotFoundException("id" , id.toString()));
+
+        Optional<User> userByEmail = repository.findByEmail(newData.email());
+
+        if (userByEmail.isPresent() && !userByEmail.get().getId().equals(id)) {
+             throw new DuplicateKeyException("User" , "email" , newData.email());
+        }
 
         this.mapper.updateEntity(existingUser, newData);
 
@@ -59,17 +67,22 @@ public class UserService {
 
     public void deleteUserById(Long id) {
         User user = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeception("User with id: " + id + " Not Found"));
+                .orElseThrow(() -> new UserNotFoundException("id" , id.toString()));
         repository.delete(user);
     }
 
     public void enableUserByEmail(String email) {
         User user = repository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundExeception("User with email: " + email + " Not Found"));
+                .orElseThrow(() -> new UserNotFoundException("email" , email));
         user.setActive(true);
         repository.save(user);
     }
 
+    private void validateEmail(String email) {
+        if (repository.findByEmail(email).isPresent()) {
+            throw new DuplicateKeyException("User" , "email" , email);
+        }
+    }
 
 
 }
