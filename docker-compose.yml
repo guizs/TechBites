@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  techbites-api:
+    build:
+      dockerfile: Dockerfile.techbites-api
+    container_name: techbites-api
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - techbites-network
+    restart: always
+    depends_on:
+      - techbites-db
+
+  techbites-db:
+    build:
+      dockerfile: Dockerfile.techbites-db
+    container_name: techbites-db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - techbites-network
+    restart: always
+
+volumes:
+  postgres_data:
+
+networks:
+  techbites-network:
+    driver: bridge

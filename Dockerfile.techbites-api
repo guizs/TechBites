@@ -1,0 +1,16 @@
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+
+WORKDIR /build
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jdk-alpine
+
+WORKDIR /app
+COPY --from=builder /build/target/techbites-1.0.0.jar app.jar
+
+RUN mkdir -p /app/logs
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

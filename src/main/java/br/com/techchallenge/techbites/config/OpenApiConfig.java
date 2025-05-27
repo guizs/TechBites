@@ -16,7 +16,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Locatech API")
+                                .title("TechBites API")
                                 .description("Projeto desenvolvido durante o Tech Challenger")
                                 .version("v0.0.1")
                                 .license(new License().name("Apache 2.0").url("https://github.com/TechBites-fiap"))
