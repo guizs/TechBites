@@ -15,6 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import br.com.techchallenge.techbites.entities.enums.Role;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -90,5 +96,50 @@ public class ControllerExeceptionHandler {
         return ResponseEntity.status(status).body(new DuplicateKeyDTO(e.getMessage() , status , method , path));
 
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ValidationErrorDTO> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex,
+            HttpServletRequest request
+    ) {
+        var status = HttpStatus.BAD_REQUEST.value();
+        var method = request.getMethod();
+        var path = request.getRequestURI();
+        List<String> errors = new ArrayList<>();
+
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
+                invalidFormatException.getTargetType().equals(Role.class)) {
+            errors.add("role : Invalid role. Allowed values: ADMIN, USER, USER_RESTAURANT.");
+        } else {
+            errors.add("Malformed JSON request.");
+        }
+
+        log.warn("Deserialization error: [{} {}] - {}", method, path, errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorDTO(errors, status, method, path));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ValidationErrorDTO> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException ex,
+            HttpServletRequest request
+    ) {
+        var status = HttpStatus.BAD_REQUEST.value();
+        var method = request.getMethod();
+        var path = request.getRequestURI();
+
+        String paramName = ex.getName(); // geralmente "id"
+        String expectedType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "expected type";
+
+        List<String> errors;
+        if (expectedType.equals(Long.class.getSimpleName())) {
+            errors = List.of(paramName + " : Invalid value. Must be a valid Number.");
+        } else {
+            errors = List.of(paramName + " : Invalid value. Must be a valid " + expectedType + ".");
+        }
+
+        log.warn("Type mismatch error: [{} {}] - {}", method, path, errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorDTO(errors, status, method, path));
+    }
+
 
 }

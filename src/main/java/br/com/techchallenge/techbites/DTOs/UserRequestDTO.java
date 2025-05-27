@@ -25,7 +25,6 @@ public record UserRequestDTO(
         String password,
 
         @Schema(description = "Papel do usuário no sistema. Valores permitidos: ADMIN, USER, USER_RESTAURANT", example = "USER")
-        @NotNull(message = "Invalid role. Allowed values: [ADMIN, USER, USER_RESTAURANT ].")
+        @NotNull(message = "Invalid role. Allowed values: ADMIN, USER, USER_RESTAURANT.")
         Role role
-
 ) {}

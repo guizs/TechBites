@@ -81,14 +81,14 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/enable/{email}")
+    @PatchMapping("/enable/{id}")
     @Operation(
             summary = "Habilitar usuário",
             description = "Reativa um usuário anteriormente desabilitado, marcando o campo 'active' como true."
     )
-    public ResponseEntity<Void> enableUserByEmail(
-            @Parameter(description = "Email do usuário a ser habilitado", example = "usuario@exemplo.com") @PathVariable String email) {
-        service.enableUserByEmail(email);
+    public ResponseEntity<Void> enableUserById(
+            @Parameter(description = "ID do usuário a ser habilitado", example = "2") @PathVariable Long id) {
+        service.enableUserById(id);
         return ResponseEntity.noContent().build();
     }
 

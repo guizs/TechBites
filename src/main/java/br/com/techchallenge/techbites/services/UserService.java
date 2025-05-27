@@ -8,6 +8,7 @@ import br.com.techchallenge.techbites.repositories.UserRepository;
 import br.com.techchallenge.techbites.services.exceptions.DuplicateKeyException;
 import br.com.techchallenge.techbites.services.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +37,9 @@ public class UserService {
         List<User> users;
 
         if (active == null) {
-            users = repository.findAll();
+            users = repository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         } else {
-            users = repository.findByActive(active);
+            users = repository.findByActive(active, Sort.by(Sort.Direction.ASC, "id"));
         }
 
         return this.mapper.toListDTO(users);
@@ -71,9 +72,9 @@ public class UserService {
         repository.delete(user);
     }
 
-    public void enableUserByEmail(String email) {
-        User user = repository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("email" , email));
+    public void enableUserById(Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("id" , id.toString()));
         user.setActive(true);
         repository.save(user);
     }
@@ -83,6 +84,5 @@ public class UserService {
             throw new DuplicateKeyException("User" , "email" , email);
         }
     }
-
 
 }
