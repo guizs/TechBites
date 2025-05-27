@@ -1,4 +1,4 @@
-package br.com.techchallenge.techbites.services.execeptions;
+package br.com.techchallenge.techbites.services.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String resource, String field, String value) {

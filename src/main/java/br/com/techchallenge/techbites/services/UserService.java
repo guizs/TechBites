@@ -5,8 +5,8 @@ import br.com.techchallenge.techbites.DTOs.UserResponseDTO;
 import br.com.techchallenge.techbites.entities.User;
 import br.com.techchallenge.techbites.mappers.UserMapper;
 import br.com.techchallenge.techbites.repositories.UserRepository;
-import br.com.techchallenge.techbites.services.execeptions.DuplicateKeyException;
-import br.com.techchallenge.techbites.services.execeptions.UserNotFoundException;
+import br.com.techchallenge.techbites.services.exceptions.DuplicateKeyException;
+import br.com.techchallenge.techbites.services.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

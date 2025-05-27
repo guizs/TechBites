@@ -5,8 +5,8 @@ import br.com.techchallenge.techbites.DTOs.DuplicateKeyDTO;
 import br.com.techchallenge.techbites.DTOs.ErrorResponseDTO;
 import br.com.techchallenge.techbites.DTOs.ResourceNotFoundDTO;
 import br.com.techchallenge.techbites.DTOs.ValidationErrorDTO;
-import br.com.techchallenge.techbites.services.execeptions.DuplicateKeyException;
-import br.com.techchallenge.techbites.services.execeptions.ResourceNotFoundException;
+import br.com.techchallenge.techbites.services.exceptions.DuplicateKeyException;
+import br.com.techchallenge.techbites.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @ControllerAdvice
 public class ControllerExeceptionHandler {
