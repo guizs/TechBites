@@ -1,10 +1,10 @@
-# 🧪 Techbites
+# Techbites
 
 **Techbites** é um projeto backend desenvolvido durante a **Pós Tech em Java da FIAP**, com foco em práticas modernas utilizando **Spring Boot**, **PostgreSQL** e **Docker**. Ele simula um sistema colaborativo para gestão de restaurantes, com funcionalidades como cadastro, login e gerenciamento de usuários.
 
 ---
 
-## 📦 Requisitos
+## Requisitos
 
 Antes de executar, certifique-se de ter instalado:
 
@@ -13,7 +13,7 @@ Antes de executar, certifique-se de ter instalado:
 
 ---
 
-## 🚀 Executando a aplicação
+## Executando a aplicação
 
 Após clonar o repositório, **não é necessário configurar nenhum arquivo `.env`**. Basta executar:
 
@@ -25,7 +25,7 @@ A aplicação estará disponível em: [http://localhost:8080](http://localhost:8
 
 ---
 
-## 🧱 Estrutura do Projeto
+## Estrutura do Projeto
 
 - `Dockerfile.techbites-api`: Define a imagem da aplicação Spring Boot.
 - `Dockerfile.techbites-db`: Define a imagem do banco PostgreSQL.
@@ -34,7 +34,7 @@ A aplicação estará disponível em: [http://localhost:8080](http://localhost:8
 
 ---
 
-## 🔗 Endpoints da API
+## Endpoints da API
 
 | Método | Endpoint                      | Descrição                                 |
 |--------|-------------------------------|-------------------------------------------|
@@ -49,7 +49,7 @@ Para exemplos de requisições e respostas, acesse a [Collection do Postman](htt
 
 ---
 
-## 🧩 Serviços Docker
+## Serviços Docker
 
 | Serviço         | Porta | Container       |
 |-----------------|-------|-----------------|
@@ -61,7 +61,7 @@ Para exemplos de requisições e respostas, acesse a [Collection do Postman](htt
 
 ---
 
-## 🧠 Arquitetura
+## Arquitetura
 
 O projeto segue uma arquitetura em camadas:
 
@@ -70,17 +70,9 @@ O projeto segue uma arquitetura em camadas:
 - **Repository:** integração com o banco via Spring Data JPA.
 - **DTO, Mapper, Entity:** abstração e estrutura de dados.
 - **Config:** configurações gerais da aplicação.
-
+- 
 ---
 
-## ✅ Boas práticas aplicadas
-
-- **Spring Boot padrão:** estrutura de pacotes, `application.yml`, tratamento global de exceções.
-- **Princípios SOLID e DRY**: código modular, reutilizável e de fácil manutenção.
-- **Execução containerizada**: via `Docker Compose`, garantindo reprodutibilidade do ambiente.
-
----
-
-## 📁 Repositório
+## Repositório
 
 🔗 [https://github.com/TechBites-fiap/TechBites](https://github.com/TechBites-fiap/TechBites)
