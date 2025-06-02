@@ -15,7 +15,7 @@ Antes de executar, certifique-se de ter instalado:
 
 ## Executando a aplicação
 
-Após clonar o repositório, **não é necessário configurar nenhum arquivo. Basta executar:
+Após clonar o repositório, não é necessário configurar nenhum arquivo. Basta executar:
 
 ```bash
 docker-compose up --build
