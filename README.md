@@ -49,7 +49,3 @@ A aplicação estará disponível em: [http://localhost:8080](http://localhost:8
 Para exemplos de requisições e respostas, acesse a [Collection do Postman](https://fiap-team-3629.postman.co/workspace/FIAP-team-Workspace~31d695a1-60ef-4fb0-8c0d-d37e7e2190c5/collection/42979032-1831d148-7563-438f-80cb-3e878814d7b2?action=share&creator=42979032&active-environment=42979032-e6903392-b44c-4514-b7e1-8f5efbf33529).
 
 ---
-
-## Repositório
-
-🔗 [https://github.com/TechBites-fiap/TechBites](https://github.com/TechBites-fiap/TechBites)
